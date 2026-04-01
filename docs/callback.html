@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TikTok OAuth Callback — Casa Vaya Vida</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 600px; margin: 60px auto; padding: 0 24px; color: #1a1a18; line-height: 1.8; background: #f5f0e8; text-align: center; }
+  h1 { font-size: 20px; font-weight: normal; letter-spacing: 0.06em; }
+  .code-box { background: #fff; border: 2px solid #8b7355; border-radius: 6px; padding: 16px; margin: 20px 0; font-family: 'Courier New', monospace; font-size: 14px; word-break: break-all; user-select: all; }
+  .success { color: #4a7c59; }
+  .error { color: #8b3a3a; }
+  .hint { font-size: 13px; color: #6b6560; margin-top: 16px; }
+  button { font-family: inherit; font-size: 13px; padding: 8px 20px; background: #8b7355; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 12px; }
+  button:hover { background: #7a6245; }
+</style>
+</head><body>
+<h1>TikTok Authorization</h1>
+<div id="result">Processing...</div>
+<script>
+const params = new URLSearchParams(window.location.search);
+const code = params.get('code');
+const error = params.get('error');
+const state = params.get('state');
+const el = document.getElementById('result');
+
+if (error) {
+  el.innerHTML = `<p class="error">Authorization failed: ${error}</p><p class="hint">${params.get('error_description') || ''}</p>`;
+} else if (code) {
+  el.innerHTML = `
+    <p class="success">Authorization successful.</p>
+    <p>Copy this code and paste it into your dashboard terminal:</p>
+    <div class="code-box" id="code-value">${code}</div>
+    <button onclick="navigator.clipboard.writeText('${code}');this.textContent='Copied'">Copy Code</button>
+    <p class="hint">This code expires in 60 seconds. Paste it into the terminal where dashboard/serve.py is running.</p>
+  `;
+} else {
+  el.innerHTML = '<p class="error">No authorization code received.</p>';
+}
+</script>
+</body></html>
